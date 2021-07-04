@@ -1,59 +1,84 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed;
-    public float jumpForce;
+    public float maxSpeed = 10f;
+    public float jumpForce = 700f;
+    bool facingRight = true;
+    bool grounded = false;
+    public Transform groundCheck;
+    public float groundRadius = 0.2f;
+    public LayerMask whatIsGround;
+    public int score;
+    public float move;
+    public float spawnX, spawnY;
+    private bool isGrounded;
+    public int extraJumps;
     private Rigidbody2D rb;
-    private float moveInput;
-
-    private bool faceRight = true;
-
-    public bool isGrounded;
-
-  
 
 
 
-
-    void Jump()
-    {
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-    }
-
+    // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent <Rigidbody2D> ();
+        spawnX = transform.position.x;
+        spawnY = transform.position.y;
     }
 
-    
+
     void FixedUpdate()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.MovePosition(rb.position + Vector2.right * moveX * speed * Time.deltaTime);
+        grounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, whatIsGround);
 
-
-        if (moveX > 0 && !faceRight)
-            flip();
-
-        else if (moveX < 0 && faceRight)
-            flip();
+        move = Input.GetAxis("Horizontal");
     }
-    void flip ()   
+
+    // Update is called once per frame
+    void Update()
     {
-        faceRight = !faceRight;
-        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
         
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+
+        if (isGrounded == true)
         {
-            rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-          
+            extraJumps = 2;
         }
 
+
+
+        if (grounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)))
+        {
+            GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, jumpForce));
+        }
+        GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+
+        if (move > 0 && !facingRight)
+            Flip();
+        else if (move < 0 && facingRight)
+            Flip();
+
+        extraJumps--;
+      if (Input.GetKeyDown(KeyCode.UpArrow)&& extraJumps == 0 && isGrounded == true)
+        {
+           rb.velocity = Vector2.up * jumpForce;
+        }
+
+
+    }
+
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
 
+   
 
-  
-}
+
+    }
+
 

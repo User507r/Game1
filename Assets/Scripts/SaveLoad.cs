@@ -25,7 +25,7 @@ public class SaveLoad : MonoBehaviour
 
         Load();
 
-        MapList.mapList.SetList();
+        //MapList.mapList.SetList();
     }
 
     public void SaveMapStatus ( int index, int status)
