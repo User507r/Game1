@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
         if (grounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)))
         {
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, jumpForce));
+            if(Sound.sound != null) Sound.sound.PlaySound("positive");
         }
         GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
 
@@ -59,10 +60,12 @@ public class Player : MonoBehaviour
             Flip();
 
         extraJumps--;
+        /*
       if (Input.GetKeyDown(KeyCode.UpArrow)&& extraJumps == 0 && isGrounded == true)
         {
            rb.velocity = Vector2.up * jumpForce;
-        }
+           
+        }*/
 
 
     }
