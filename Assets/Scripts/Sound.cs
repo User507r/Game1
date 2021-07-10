@@ -13,26 +13,30 @@ public class Sound : MonoBehaviour
 
     private void Awake()
     {
-		sound = this;
+		if (sound == null)
+		{
+			sound = this;
+			GameObject.DontDestroyOnLoad(gameObject);
+			Listener = gameObject.GetComponent<AudioListener>();
+			SourceMusic = gameObject.AddComponent<AudioSource>();
+			SourceMusic.playOnAwake = false;
+			Source = new AudioSource[10];
+			Clip = new AudioClip[10];
 
+			for (int i = 0; i < 10; i++)
+			{
+				Source[i] = gameObject.AddComponent<AudioSource>();
+				Source[i].playOnAwake = false;
+			}
+			PlayMusic();
+			
+		}
 	}
 
 
     public void Start()
 	{	
-		
-		Listener = gameObject.GetComponent<AudioListener>();
-		SourceMusic = gameObject.AddComponent<AudioSource>();
-		SourceMusic.playOnAwake = false;
-		Source = new AudioSource[10];
-		Clip = new AudioClip[10];
 
-		for(int i = 0; i < 10; i++) 
-		{
-			Source[i] = gameObject.AddComponent<AudioSource>();
-			Source[i].playOnAwake = false;
-		}
-		//PlayMusic();
 	}
 	
 	public void PlaySound (string Type)
@@ -63,5 +67,15 @@ public class Sound : MonoBehaviour
 	public void SetMusicVolume(float volume) 
 	{
 		SourceMusic.volume = volume;
+		PlayerPrefs.SetFloat("MusicVolum", volume);
+	}
+
+	public void SetSoundVolume(float volume)
+	{
+		PlayerPrefs.SetFloat("SoundVolum", volume);
+		for (int i = 0; i < 10; i++)
+		{
+			Source[i].volume = volume;
+		}
 	}
 }

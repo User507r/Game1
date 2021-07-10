@@ -45,12 +45,12 @@ public class Player : MonoBehaviour
             extraJumps = 2;
         }
 
-
+  
 
         if (grounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)))
         {
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, jumpForce));
-            if(Sound.sound != null) Sound.sound.PlaySound("positive");
+            Sound.sound.PlaySound("positive");
         }
         GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
 
